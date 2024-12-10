@@ -1,0 +1,19 @@
+{
+  "name": "persons",
+  "version": "1.0.0",
+  "description": "api persons",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cana2302/part3.git"
+  },
+  "author": "Franco Ariel Canavese",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cana2302/part3/issues"
+  },
+  "homepage": "https://github.com/cana2302/part3#readme"
+}
