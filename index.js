@@ -26,60 +26,85 @@ let persons = [
   }
 ]
 
-app.get('/', (request, response) => {
-  response.send('<h1>Hello World!</h1>')
-})
+// ------ 3.1 ------
 
 app.get('/api/persons', (request, response) => {
   response.json(persons)
 })
+
+// ------ 3.2 ------
+
+app.get('/info', (request, response) => {
+  const number = persons.length
+  const currentDate = new Date();
+
+  response.send(
+    `<p>Phonebook has info for ${number} people</p>
+     <p>${currentDate}</p>`
+  )
+})
+
+// ------ 3.3 ------
 
 app.get('/api/persons/:id', (request, response) => {
   const id = Number(request.params.id)
   const person = persons.find(person => person.id === id)
   
   if (person) {
-    response.json(persons)
+    response.json(person)
   } else {
     response.status(404).end()
   }
 })
 
-const generateId = () => {
-  const maxId = notes.length > 0
-    ? Math.max(...persons.map(n => n.id))
-    : 0
-  return maxId + 1
-}
+// ------ 3.4 ------
 
-app.post('/api/notes', (request, response) => {
-  const body = request.body
-
-  if (!body.content) {
-    return response.status(400).json({ 
-      error: 'content missing' 
-    })
-  }
-
-  const note = {
-    content: body.content,
-    important: Boolean(body.important) || false,
-    id: generateId(),
-  }
-
-  personss = personss.concat(note)
-
-  response.json(note)
-})
-
-app.delete('/api/notes/:id', (request, response) => {
+app.delete('/api/persons/:id', (request, response) => {
   const id = Number(request.params.id)
-  notes = notes.filter(note => note.id !== id)
+  persons = persons.filter(person => person.id !== id)
 
   response.status(204).end()
 })
 
-const PORT = 3001
+// ------ 3.5 & 3.6 ------
+
+const generateId = () => {
+  return Math.floor(Math.random() * 1000000) + 1;
+};
+
+const checkNameExistence = (name) => {
+  return persons.some(person => person.name === name);
+};
+
+app.post('/api/persons', (request, response) => {
+  const { name, number } = request.body;
+ 
+  if (!name || !number) {
+    return response.status(400).json({ 
+      error: 'content missing' 
+    });
+  }
+
+  if (checkNameExistence(name)) {
+    return response.status(400).json({
+      error: 'name must be unique'
+    });
+  }
+
+  const person = {
+    id: generateId(),
+    name: name,
+    number: number,
+  };
+
+  persons = persons.concat(person);
+
+  response.json(person);
+});
+
+// --------------
+
+const PORT = 3001;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
-})
+});
