@@ -2,8 +2,17 @@ const express = require('express');
 const morgan = require('morgan');
 const app = express();
 
+/* Exercise 3.7
 app.use(morgan('tiny'));
+*/
+
 app.use(express.json());
+
+morgan.token('body', (req) => {
+  return JSON.stringify(req.body);
+});
+
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'));
 
 let persons = [
   { 
