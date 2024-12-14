@@ -1,2 +1,2 @@
-// GET info (numbers and date)
-GET http://localhost:3001/info
+// GET info 
+GET https://part3-notes-c8jm.onrender.com/info

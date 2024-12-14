@@ -1,0 +1,2 @@
+// GET info (numbers and date)
+GET http://localhost:3001/info

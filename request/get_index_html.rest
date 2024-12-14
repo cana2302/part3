@@ -1,0 +1,2 @@
+// GET '/' or 'index.html' 
+GET https://part3-notes-c8jm.onrender.com/

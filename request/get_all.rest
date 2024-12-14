@@ -1,2 +1,2 @@
 // GET all persons
-GET http://localhost:3001/api/persons
+GET https://part3-notes-c8jm.onrender.com/api/persons
