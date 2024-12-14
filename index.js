@@ -39,6 +39,12 @@ let persons = [
   }
 ]
 
+// ------ Render ------
+
+app.get('/', (req, res) => {
+  res.send('Welcome API from RENDER.com');
+});
+
 // ------ 3.1 ------
 
 app.get('/api/persons', (request, response) => {
