@@ -1,14 +1,11 @@
 const express = require('express');
 const morgan = require('morgan');
-// const cors = require('cors') 
+const cors = require('cors'); 
 const app = express();
 
-/* Exercise 3.7
-app.use(morgan('tiny'));
-*/
-
+app.use(express.static('dist'));
 app.use(express.json());
-// app.use(cors())
+app.use(cors());
 
 morgan.token('body', (req) => {
   return JSON.stringify(req.body);
@@ -37,22 +34,14 @@ let persons = [
     "name": "Mary Poppendieck", 
     "number": "39-23-6423122"
   }
-]
+];
 
-// ------ Render ------
-
-app.get('/', (req, res) => {
-  res.send('Welcome API from RENDER.com');
-});
-
-// ------ 3.1 ------
-
+// ------ GET /api/persons ------
 app.get('/api/persons', (request, response) => {
   response.json(persons)
-})
+});
 
-// ------ 3.2 ------
-
+// ------ GET /info ------
 app.get('/info', (request, response) => {
   const number = persons.length
   const currentDate = new Date();
@@ -61,10 +50,9 @@ app.get('/info', (request, response) => {
     `<p>Phonebook has info for ${number} people</p>
      <p>${currentDate}</p>`
   )
-})
+});
 
-// ------ 3.3 ------
-
+// ------ GET /api/persons/2 ------
 app.get('/api/persons/:id', (request, response) => {
   const id = Number(request.params.id)
   const person = persons.find(person => person.id === id)
@@ -74,19 +62,17 @@ app.get('/api/persons/:id', (request, response) => {
   } else {
     response.status(404).end()
   }
-})
+});
 
-// ------ 3.4 ------
-
+// ------ DELETE ------
 app.delete('/api/persons/:id', (request, response) => {
   const id = Number(request.params.id)
   persons = persons.filter(person => person.id !== id)
 
   response.status(204).end()
-})
+});
 
-// ------ 3.5 & 3.6 ------
-
+// ------ POST ------
 const generateId = () => {
   return Math.floor(Math.random() * 1000000) + 1;
 };
@@ -121,9 +107,8 @@ app.post('/api/persons', (request, response) => {
   response.json(person);
 });
 
-// --------------
-
+// ------- PORT ---------
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
-})
+});
