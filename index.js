@@ -4,8 +4,6 @@ require('dotenv').config();
 
 const Person = require('./models/person');
 
-let persons = [];
-
 app.use(express.static('dist'));
 
 const requestLogger = (request, response, next) => {
@@ -16,10 +14,19 @@ const requestLogger = (request, response, next) => {
   next()
 };
 
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message)
+
+  if (error.name === 'CastError') {
+    return response.status(400).send({ error: 'malformatted id' })
+  }
+
+  next(error)
+}
+
 const cors = require('cors'); 
 
 app.use(cors());
-
 app.use(express.json());
 app.use(requestLogger);
 
@@ -50,15 +57,15 @@ app.get('/info', (request, response) => {
 
 // ------ GET /api/persons/2 -------
 app.get('/api/persons/:id', (request, response) => {
-  Person.findById(request.params.id).then(person => {
-    response.json(person)
+  Person.findById(request.params.id)
+  .then(person => {
+    if (person) {
+      response.json(person)
+    } else {
+      response.status(404).end()
+    }
   })
-  
-  if (person) {
-    response.json(person)
-  } else {
-    response.status(404).end()
-  }
+  .catch(error => next(error))
 });
 
 // ------ POST ------
@@ -96,16 +103,35 @@ app.post('/api/persons', (request, response) => {
   })
 });
 
-// ------ DELETE ------
-app.delete('/api/persons/:id', (request, response) => {
-  const id = Number(request.params.id)
-  persons = persons.filter(person => person.id !== id)
+// ------ PUT ------
+app.put('/api/persons/:id', (request, response, next) => {
+  const body = request.body
 
-  response.status(204).end()
-});
+  const person = {
+    name: body.name,
+    number: body.number,
+  }
+
+  Person.findByIdAndUpdate(request.params.id, person, { new: true })
+    .then(updatedPerson => {
+      response.json(updatedPerson)
+    })
+    .catch(error => next(error))
+})
+
+// ------ DELETE ------
+app.delete('/api/persons/:id', (request, response, next) => {
+  Person.findByIdAndDelete(request.params.id)
+    .then(result => {
+      response.status(204).end()
+    })
+    .catch(error => next(error))
+})
 
 // ------ unknown endpoint --------
 app.use(unknownEndpoint);
+// ------ error handler --------
+app.use(errorHandler)
 
 // ------- PORT ---------
 const PORT = process.env.PORT

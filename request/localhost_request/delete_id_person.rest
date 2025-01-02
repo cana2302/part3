@@ -1,3 +1,2 @@
 // DELETE especific person..
-DELETE http://localhost:3001/api/persons/2
-
+DELETE http://localhost:3001/api/persons/6776965c8f0a832eaf3d719e

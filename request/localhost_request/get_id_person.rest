@@ -1,2 +1,7 @@
 // GET especific person..
+
+
+GET http://localhost:3001/api/persons/6776965c8f0a832eaf3d719e
+
+
 GET http://localhost:3001/api/persons/2
