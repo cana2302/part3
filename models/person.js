@@ -1,10 +1,10 @@
-const mongoose = require('mongoose');
+const mongoose = require('mongoose')
 
-mongoose.set('strictQuery', false);
+mongoose.set('strictQuery', false)
 
 const url = process.env.MONGODB_URI
 
-console.log('connecting to', url);
+console.log('connecting to', url)
 
 mongoose.connect(url)
 
@@ -16,9 +16,9 @@ mongoose.connect(url)
   })
 
 const phoneValidator = function(phone) {
-  const phoneRegex = /^\d{2,3}-\d{6,10}$/;
-  return phoneRegex.test(phone);
-};
+  const phoneRegex = /^\d{2,3}-\d{6,10}$/
+  return phoneRegex.test(phone)
+}
 
 const personSchema = new mongoose.Schema({
   name: {
@@ -34,7 +34,7 @@ const personSchema = new mongoose.Schema({
       message: props => `${props.value} is not a valid phone number!`
     }
   },
-});
+})
 
 personSchema.set('toJSON', {
   transform: (document, returnedObject) => {
@@ -42,6 +42,6 @@ personSchema.set('toJSON', {
     delete returnedObject._id
     delete returnedObject.__v
   }
-});
+})
 
-module.exports = mongoose.model('Person', personSchema);
+module.exports = mongoose.model('Person', personSchema)
